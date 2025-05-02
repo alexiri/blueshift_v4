@@ -24,7 +24,7 @@ jobs:
     uses: alexiri/build_image/.github/workflows/reusable-workflow.yml@main
     with:
       containerfile: Dockerfile
-      image-name: ${{ env.IMAGE_NAME }}
+      image-name: "${{ github.event.repository.name }}"
       platforms: "amd64"
     secrets:
       SIGNING_SECRET: "not yet"
