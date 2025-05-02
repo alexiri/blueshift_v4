@@ -27,6 +27,8 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       platforms: "amd64"
     secrets:
+      REGISTRY_USER: ${{ github.actor }}
+      REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SIGNING_SECRET: "not yet"
     permissions:
       contents: read
