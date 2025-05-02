@@ -28,3 +28,7 @@ jobs:
       platforms: "amd64"
     secrets:
       SIGNING_SECRET: "not yet"
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
