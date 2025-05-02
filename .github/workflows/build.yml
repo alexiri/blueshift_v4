@@ -1,0 +1,34 @@
+---
+name: Build image
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: "${{ github.event.repository.name }}"  # the name of the image produced by this build, matches repo names
+  IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build-image:
+    uses: alexiri/build_image/.github/workflows/reusable-workflow.yml@main
+    with:
+      containerfile: Dockerfile
+      image-name: "${{ github.event.repository.name }}"
+      platforms: "amd64"
+    secrets:
+      SIGNING_SECRET: "not yet"
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
