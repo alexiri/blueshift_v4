@@ -59,7 +59,7 @@ jobs:
           set -ex
 
           cat /etc/os-release
-          bootc version
+          bootc -V
           EOF
 
           podman run --rm \
