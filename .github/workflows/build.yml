@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: "${{ github.event.repository.name }}"  # the name of the image produced by this build, matches repo names
+  IMAGE_NAME: "${{ github.event.repository.name }}"
+  LATEST_TAG: "latest"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -64,4 +65,4 @@ jobs:
           podman run --rm \
             -v /tmp/test.sh:/tmp/test.sh \
             ${{ env.IMAGE_REF }} \
-            /bin/bash -c /tmp/test.sh
+            /bin/bash /tmp/test.sh
