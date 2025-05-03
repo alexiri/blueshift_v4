@@ -26,7 +26,7 @@ jobs:
     with:
       containerfile: Containerfile
       image-name: "${{ github.event.repository.name }}"
-      latest-tag: "latest" # ${{ env.LATEST_TAG }}
+      previous-image: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
       platforms: "amd64,arm64"
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,15 +72,20 @@ jobs:
       DIGEST: ${{ needs.build-image.outputs.digest }}
 
     steps:
-      - name: Log in to ghcr.io
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Log in to ghcr.io
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Promote image
-        run: |
-          podman pull ${{ env.IMAGE_REF }}@${{ env.DIGEST }}
-          podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
-          podman push ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
+      # - name: Promote image
+      #   run: |
+      #     podman pull ${{ env.IMAGE_REF }}@${{ env.DIGEST }}
+      #     podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
+      #     podman push ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
+
+      - uses: imjasonh/setup-crane@v0.1
+
+      - run: |
+          crane tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.LATEST_TAG }}
