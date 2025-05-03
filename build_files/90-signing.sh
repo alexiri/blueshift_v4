@@ -2,8 +2,10 @@
 
 set -xeuo pipefail
 
+CONTEXT_PATH="$(realpath "$(dirname "$0")/..")" # should return /ctx
+
 # If we can't find the cosign public key, there's nothing to set up.
-if [ ! -f /ctx/cosign.pub ]; then
+if [ ! -f ${CONTEXT_PATH}/cosign.pub ]; then
     echo "Cosign public key not found, skipping setup."
     exit 0
 fi
@@ -13,7 +15,7 @@ CONTAINER_PKI="/etc/pki/containers"
 IMAGE_NAME_FILE="${IMAGE_NAME//\//_}"
 
 mkdir -p $CONTAINER_PKI
-cp /ctx/cosign.pub ${CONTAINER_PKI}/${IMAGE_NAME_FILE}.pub
+cp ${CONTEXT_PATH}/cosign.pub ${CONTAINER_PKI}/${IMAGE_NAME_FILE}.pub
 
 POLICY_FILE="${CONTAINER_DIR}/policy.json"
 
