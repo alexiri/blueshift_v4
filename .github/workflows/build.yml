@@ -85,7 +85,7 @@ jobs:
       #     podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
       #     podman push ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
 
-      - uses: imjasonh/setup-crane@v0.1
+      - uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
 
       - run: |
           crane tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.LATEST_TAG }}
