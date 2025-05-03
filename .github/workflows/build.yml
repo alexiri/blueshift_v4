@@ -69,6 +69,13 @@ jobs:
       DIGEST: ${{ needs.build-image.outputs.digest }}
 
     steps:
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Promote image
         run: |
           podman pull ${{ env.IMAGE_REF }}@${{ env.DIGEST }}
