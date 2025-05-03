@@ -27,7 +27,7 @@ jobs:
       containerfile: Containerfile
       image-name: "${{ github.event.repository.name }}"
       latest-tag: "latest" # ${{ env.LATEST_TAG }}
-      platforms: "amd64"
+      platforms: "amd64,arm64"
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
