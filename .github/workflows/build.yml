@@ -44,7 +44,7 @@ jobs:
       IMAGE_REF: "${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}"
 
     steps:
-      - name: Build and run test container
+      - name: Test container
         run: |
           # Create a short script to test the image using heredoc
           cat << 'EOF' > /tmp/test.sh
