@@ -21,6 +21,7 @@ concurrency:
 
 jobs:
   build-image:
+    name: Build image
     uses: alexiri/build_image/.github/workflows/reusable-workflow.yml@main
     with:
       containerfile: Containerfile
