@@ -22,7 +22,7 @@ concurrency:
 jobs:
   build-image:
     name: Build image
-    uses: alexiri/build_image/.github/workflows/reusable-workflow.yml@main
+    uses: alexiri/build_image/.github/workflows/build-image.yml@main
     with:
       containerfile: Containerfile
       image-name: "${{ github.event.repository.name }}"
@@ -62,30 +62,12 @@ jobs:
 
   promote-image:
     name: Promote image
-    runs-on: ubuntu-latest
     needs: [build-image, test-image]
+    uses: alexiri/build_image/.github/workflows/retag-image.yml@main
+    with:
+      image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
+      tag: latest # ${{ env.LATEST_TAG }}
+    secrets:
+      REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       packages: write
-
-    env:
-      IMAGE_REF: ${{ needs.build-image.outputs.image-ref }}
-      DIGEST: ${{ needs.build-image.outputs.digest }}
-
-    steps:
-      # - name: Log in to ghcr.io
-      #   uses: docker/login-action@v2
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Promote image
-      #   run: |
-      #     podman pull ${{ env.IMAGE_REF }}@${{ env.DIGEST }}
-      #     podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
-      #     podman push ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
-
-      - uses: imjasonh/setup-crane@v0.1
-
-      - run: |
-          crane tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.LATEST_TAG }}
