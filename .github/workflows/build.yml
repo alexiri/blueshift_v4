@@ -70,4 +70,6 @@ jobs:
 
     steps:
       - name: Promote image
-        run: podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
+        run: |
+          podman pull ${{ env.IMAGE_REF }}@${{ env.DIGEST }}
+          podman tag ${{ env.IMAGE_REF }}@${{ env.DIGEST }} ${{ env.IMAGE_REF }}:${{ env.LATEST_TAG }}
