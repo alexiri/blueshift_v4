@@ -21,6 +21,7 @@ POLICY_FILE="${CONTAINER_DIR}/policy.json"
 
 # We need to add our cosign public key to the policy file and make sure
 # that the default policy is set to reject.
+# We'll also add a permissive policy for all the local transports.
 jq --arg image_registry "${IMAGE_REGISTRY}" \
    --arg image_name "${IMAGE_NAME}" \
    --arg pki_path "${CONTAINER_PKI}/${IMAGE_NAME_FILE}.pub" \
@@ -35,6 +36,9 @@ jq --arg image_registry "${IMAGE_REGISTRY}" \
         }
     ] }
     + .
+    | .transports *= (["docker-daemon", "atomic", "containers-storage", "dir", "oci", "oci-archive", "docker-archive", "tarball"]
+        | map({(.): {"": [{"type": "insecureAcceptAnything"}]}})
+        | add)
     | .default[0].type = "reject"' "${POLICY_FILE}" > "/tmp/POLICY.tmp"
 
 mv "/tmp/POLICY.tmp" "${POLICY_FILE}"
