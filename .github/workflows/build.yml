@@ -30,7 +30,6 @@ jobs:
       platforms: "amd64,arm64"
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
     permissions:
       contents: read
       packages: write
