@@ -36,7 +36,7 @@ jq --arg image_registry "${IMAGE_REGISTRY}" \
         }
     ] }
     + .
-    | .transports *= (["docker-daemon", "atomic", "containers-storage", "dir", "oci", "oci-archive", "docker-archive", "tarball"]
+    | .transports *= (["docker-daemon", "containers-storage", "dir", "oci", "oci-archive", "docker-archive", "tarball"]
         | map({(.): {"": [{"type": "insecureAcceptAnything"}]}})
         | add)
     | .default[0].type = "reject"' "${POLICY_FILE}" > "/tmp/POLICY.tmp"
