@@ -66,6 +66,7 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
       update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
+      update_is_signed: ${{ secrets.SIGNING_SECRET != '' }}
       config-file: ./iso.toml
       platforms: "amd64,arm64"
 
