@@ -18,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-iso:
-    name: debug- Build ISO
+  debug-iso:
+    name: debug - Build ISO
     needs: [build-image, test-image]
     uses: alexiri/build_image/.github/workflows/build-iso.yml@main
     with:
