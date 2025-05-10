@@ -23,7 +23,7 @@ jobs:
     uses: alexiri/build_image/.github/workflows/build-iso.yml@main
     with:
       image-name: "${{ github.event.repository.name }}"
-      image: "ghcr.io/alexiri/blueshift_v4@ sha256:2decf49d439cc4cea9fcaa5ae7902dbbcea0a20b35cd6d89a675f949efef66c8 "
+      image: "ghcr.io/alexiri/blueshift_v4@sha256:2decf49d439cc4cea9fcaa5ae7902dbbcea0a20b35cd6d89a675f949efef66c8"
       update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
       config-file: iso.toml
       platforms: "amd64" #"amd64,arm64"
