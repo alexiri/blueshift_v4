@@ -58,6 +58,16 @@ jobs:
             ${{ env.IMAGE_REF }} \
             /bin/bash /tmp/test.sh
 
+  build-iso:
+    name: Build ISO
+    needs: [build-image, test-image]
+    uses: alexiri/build_container_installer/.github/workflows/build-iso.yml@main
+    with:
+      image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
+      update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
+      config-file: iso.toml
+      platforms: "amd64" #"amd64,arm64"
+
   promote-image:
     name: Promote image
     needs: [build-image, test-image]
