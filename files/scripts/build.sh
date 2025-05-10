@@ -10,9 +10,9 @@ cp -avf "${CONTEXT_PATH}/system_files/." /
 printf "::endgroup::\n"
 
 for script in $(find ${BUILD_SCRIPTS_PATH} -maxdepth 1 -iname "*-*.sh" -type f | sort --sort=human-numeric); do
-    printf "::group:: === $(basename "$script") ===\n"
-		"$(realpath $script)"
-    printf "::endgroup::\n"
+  printf "::group:: === $(basename "$script") ===\n"
+  "$(realpath $script)"
+  printf "::endgroup::\n"
 done
 
 printf "::group:: === Image Cleanup ===\n"
