@@ -63,6 +63,7 @@ jobs:
     needs: [build-image, test-image]
     uses: alexiri/build_image/.github/workflows/build-iso.yml@main
     with:
+      image-name: "${{ github.event.repository.name }}"
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
       update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
       config-file: iso.toml
