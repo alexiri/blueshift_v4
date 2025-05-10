@@ -12,6 +12,9 @@ QEMU_ISO ?= ./output/bootiso/install.iso
 
 .ONESHELL:
 
+clean:
+	$(SUDO) rm -rf ./output
+
 image:
 	$(PODMAN) build \
 		--security-opt=label=disable \
