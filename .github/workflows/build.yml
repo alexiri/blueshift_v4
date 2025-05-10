@@ -61,7 +61,7 @@ jobs:
   build-iso:
     name: Build ISO
     needs: [build-image, test-image]
-    uses: alexiri/build_container_installer/.github/workflows/build-iso.yml@main
+    uses: alexiri/build_image/.github/workflows/build-iso.yml@main
     with:
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
       update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
