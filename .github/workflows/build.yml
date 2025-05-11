@@ -19,6 +19,7 @@ jobs:
     outputs:
       LATEST_TAG: ${{ steps.set.outputs.LATEST_TAG }}
       IMAGE_NAME: ${{ steps.set.outputs.IMAGE_NAME }}
+      IS_SIGNED: ${{ steps.set.outputs.IS_SIGNED }}
     steps:
       - name: Set environment variables
         id: set
@@ -33,6 +34,12 @@ jobs:
           fi
 
           echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}" >> $GITHUB_OUTPUT
+
+          if [ -z "${{ secrets.SIGNING_SECRET }}"]; then
+            echo "IS_SIGNED=false" >> $GITHUB_ENV
+          else
+            echo "IS_SIGNED=true" >> $GITHUB_ENV
+          fi
 
   build-image:
     name: Build image
@@ -83,7 +90,7 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
       update_origin_ref: "${{ needs.set-env.outputs.IMAGE_NAME }}:${{ needs.set-env.outputs.LATEST_TAG }}"
-      update_is_signed: true
+      update_is_signed: ${{ needs.set-env.outputs.IS_SIGNED }}
       config-file: ./iso.toml
       platforms: "amd64,arm64"
 
