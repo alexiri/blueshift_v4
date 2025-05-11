@@ -9,22 +9,39 @@ on:
       - '**/README.md'
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: "${{ github.event.repository.name }}"
-  LATEST_TAG: "latest"
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
+  set-env:
+    runs-on: ubuntu-latest
+    outputs:
+      LATEST_TAG: ${{ steps.set.outputs.LATEST_TAG }}
+      IMAGE_NAME: ${{ steps.set.outputs.IMAGE_NAME }}
+    steps:
+      - name: Set environment variables
+        id: set
+        run: |
+          # Pick a latest tag based on the event type
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "LATEST_TAG=pr-${{ github.event.number }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" != refs/heads/main ]]; then
+            echo "LATEST_TAG=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "LATEST_TAG=latest" >> $GITHUB_OUTPUT
+          fi
+
+          echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}" >> $GITHUB_OUTPUT
+
   build-image:
     name: Build image
     uses: alexiri/build_image/.github/workflows/build-image.yml@main
+    needs: set-env
     with:
       containerfile: Containerfile
       image-name: "${{ github.event.repository.name }}"
-      previous-image: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
+      previous-image: "${{ needs.set-env.outputs.IMAGE_NAME }}:${{ needs.set-env.outputs.LATEST_TAG }}"
       platforms: "amd64,arm64"
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,24 +77,24 @@ jobs:
 
   build-iso:
     name: Build ISO
-    needs: [build-image, test-image]
+    needs: [set-env, build-image, test-image]
     uses: alexiri/build_image/.github/workflows/build-iso.yml@main
     with:
       image-name: "${{ github.event.repository.name }}"
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
-      update_origin_ref: "ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
+      update_origin_ref: "${{ needs.set-env.outputs.IMAGE_NAME }}:${{ needs.set-env.outputs.LATEST_TAG }}"
       update_is_signed: true
       config-file: ./iso.toml
       platforms: "amd64,arm64"
 
   promote-image:
     name: Promote image
-    needs: [build-image, test-image]
+    needs: [set-env, build-image, test-image]
     if: ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
     uses: alexiri/build_image/.github/workflows/retag-image.yml@main
     with:
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
-      tag: latest # ${{ env.LATEST_TAG }}
+      tag: ${{ needs.set-env.outputs.LATEST_TAG }}
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
