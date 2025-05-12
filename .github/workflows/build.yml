@@ -41,9 +41,9 @@ jobs:
           EOF
           )
           if [ -z "${SECRET}" ]; then
-            echo "IS_SIGNED=false" >> $GITHUB_ENV
+            echo "IS_SIGNED=false" >> $GITHUB_OUTPUT
           else
-            echo "IS_SIGNED=true" >> $GITHUB_ENV
+            echo "IS_SIGNED=true" >> $GITHUB_OUTPUT
           fi
 
   build-image:
