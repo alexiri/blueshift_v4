@@ -95,7 +95,7 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
       update_origin_ref: "${{ needs.set-env.outputs.IMAGE_NAME }}:${{ needs.set-env.outputs.LATEST_TAG }}"
-      update_is_signed: ${{ needs.set-env.outputs.IS_SIGNED }}
+      update_is_signed: ${{ needs.set-env.outputs.IS_SIGNED == 'true' }}
       config-file: ./iso.toml
       platforms: "amd64,arm64"
 
