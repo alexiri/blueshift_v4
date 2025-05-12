@@ -38,7 +38,8 @@ jobs:
           # This is a workaround so that the expansion of secrets.SIGNING_SECRET doesn't break the if statement
           SECRET=$(cat <<EOF
           ${{ secrets.SIGNING_SECRET }}
-          END)
+          EOF
+          )
           if [ -z "${SECRET}" ]; then
             echo "IS_SIGNED=false" >> $GITHUB_ENV
           else
