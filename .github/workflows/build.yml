@@ -55,6 +55,7 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       previous-image: "${{ needs.set-env.outputs.IMAGE_NAME }}:${{ needs.set-env.outputs.LATEST_TAG }}"
       platforms: "amd64,arm64"
+      upstream-public-key: ./cosign.pub
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
