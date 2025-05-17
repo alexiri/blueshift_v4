@@ -6,7 +6,8 @@ COPY files/scripts /build_files
 COPY cosign.pub /cosign.pub
 
 # Base Image
-FROM quay.io/almalinuxorg/almalinux-bootc:10-kitten@sha256:b0da9297b685395863b8026df457444fea0d91386bdbdfc0fd3559f647f97b70
+# FROM hquay.io/almalinuxorg/almalinux-bootc:10-kitten@sha256:b0da9297b685395863b8026df457444fea0d91386bdbdfc0fd3559f647f97b70
+from ghcr.io/alexiri/blueshift_v4:latest
 
 ARG IMAGE_NAME
 ARG IMAGE_REGISTRY
