@@ -110,6 +110,8 @@ jobs:
       tag: ${{ needs.set-env.outputs.LATEST_TAG }}
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      packages: write
 
   create-release:
     name: Create Release
