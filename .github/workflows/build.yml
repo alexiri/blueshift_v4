@@ -122,6 +122,6 @@ jobs:
       image-name: "${{ github.event.repository.name }}"
       version: ${{ needs.build-image.outputs.version }}
       pretty-version: ${{ needs.build-image.outputs.redhat-version-id }}
-      latest-image-ref: ${{ needs.build-image.outputs.image-ref }}:$${{ needs.set-env.outputs.LATEST_TAG }}
+      latest-image-ref: "${{ needs.build-image.outputs.image-ref }}:${{ needs.set-env.outputs.LATEST_TAG }}"
     permissions:
       contents: write
