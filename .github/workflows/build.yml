@@ -107,7 +107,10 @@ jobs:
     uses: alexiri/build_image/.github/workflows/retag-image.yml@main
     with:
       image: ${{ needs.build-image.outputs.image-ref }}@${{ needs.build-image.outputs.digest }}
-      tag: ${{ needs.set-env.outputs.LATEST_TAG }}
+      tag: |
+        ${{ needs.set-env.outputs.LATEST_TAG }}
+        ${{ needs.build-image.outputs.redhat-version-id }}
+        ${{ needs.build-image.outputs.version }}
     secrets:
       REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
